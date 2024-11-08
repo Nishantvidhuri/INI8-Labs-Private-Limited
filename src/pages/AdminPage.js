@@ -10,7 +10,6 @@ const AdminPage = ({ setIsAuthenticated, setIsAdmin }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Load all users from localStorage when the component loads
     const storedUsers = JSON.parse(localStorage.getItem('users')) || [];
     setUsers(storedUsers);
   }, []);
@@ -20,7 +19,7 @@ const AdminPage = ({ setIsAuthenticated, setIsAdmin }) => {
     localStorage.removeItem('isAdmin');
     setIsAuthenticated(false);
     setIsAdmin(false);
-    navigate('/login'); // Redirect to login page
+    navigate('/login');
   };
 
   const handleEditUser = (user) => {
@@ -48,20 +47,20 @@ const AdminPage = ({ setIsAuthenticated, setIsAdmin }) => {
   };
 
   return (
-    <div className="p-8 bg-gray-900 min-h-screen">
-      <div className="flex justify-between items-center mb-6">
-        <h2 className="text-3xl font-semibold text-yellow-400">User Management</h2>
+    <div className="p-4 sm:p-6 md:p-8 bg-gray-900 min-h-screen w-full">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 w-full">
+        <h2 className="text-2xl sm:text-3xl font-semibold text-yellow-400 mb-4 sm:mb-0">User Management</h2>
         <button
           onClick={handleLogout}
-          className="py-2 px-4 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200"
+          className="py-2 px-4 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200 w-full sm:w-auto"
         >
           Logout
         </button>
       </div>
 
       {editingUser ? (
-        <div className="bg-gray-800 p-6 rounded-lg shadow-md mb-6">
-          <h3 className="text-xl font-semibold text-yellow-400 mb-4">Edit User</h3>
+        <div className="bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md mb-6 w-full">
+          <h3 className="text-lg sm:text-xl font-semibold text-yellow-400 mb-4">Edit User</h3>
           <input
             type="text"
             value={editName}
@@ -90,39 +89,41 @@ const AdminPage = ({ setIsAuthenticated, setIsAdmin }) => {
           </button>
         </div>
       ) : (
-        <table className="w-full bg-gray-800 rounded-lg shadow-md overflow-hidden">
-          <thead>
-            <tr className="text-yellow-400 text-left">
-              <th className="p-4">Name</th>
-              <th className="p-4">Email</th>
-              <th className="p-4">Position</th>
-              <th className="p-4">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {users.map((user) => (
-              <tr key={user.email} className="text-gray-200 border-t border-gray-700">
-                <td className="p-4">{user.name}</td>
-                <td className="p-4">{user.email}</td>
-                <td className="p-4">{user.position}</td>
-                <td className="p-4 space-x-4">
-                  <button
-                    onClick={() => handleEditUser(user)}
-                    className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDeleteUser(user.email)}
-                    className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                </td>
+        <div className="overflow-x-auto w-full">
+          <table className="w-full bg-gray-800 rounded-lg shadow-md overflow-hidden">
+            <thead>
+              <tr className="text-yellow-400 text-left">
+                <th className="p-4 text-sm md:text-base">Name</th>
+                <th className="p-4 text-sm md:text-base">Email</th>
+                <th className="p-4 text-sm md:text-base">Position</th>
+                <th className="p-4 text-sm md:text-base">Actions</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.email} className="text-gray-200 border-t border-gray-700">
+                  <td className="p-4 text-sm md:text-base">{user.name}</td>
+                  <td className="p-4 text-sm md:text-base">{user.email}</td>
+                  <td className="p-4 text-sm md:text-base">{user.position}</td>
+                  <td className="p-4 flex flex-wrap gap-2">
+                    <button
+                      onClick={() => handleEditUser(user)}
+                      className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition duration-200 w-full sm:w-auto"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDeleteUser(user.email)}
+                      className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600 transition duration-200 w-full sm:w-auto"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       )}
     </div>
   );

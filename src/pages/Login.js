@@ -9,7 +9,6 @@ const Login = ({ setIsAuthenticated, setIsAdmin }) => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
 
-  // Demo account info for quick access
   const demoAccount = {
     email: "alice@example.com",
     password: "alice123"
@@ -20,11 +19,9 @@ const Login = ({ setIsAuthenticated, setIsAdmin }) => {
     setLoading(true);
     setErrorMessage('');
 
-    // Admin credentials
     const adminEmail = 'nishantvidhuri0987@gmail.com';
     const adminPassword = 'admin123';
 
-    // Check if admin credentials are used
     if (email === adminEmail && password === adminPassword) {
       setIsAuthenticated(true);
       setIsAdmin(true);
@@ -35,10 +32,7 @@ const Login = ({ setIsAuthenticated, setIsAdmin }) => {
       return;
     }
 
-    // Retrieve the array of users from localStorage
     const users = JSON.parse(localStorage.getItem('users')) || [];
-
-    // Find a user with matching email and password
     const currentUser = users.find(user => user.email === email && user.password === password);
 
     if (currentUser) {
@@ -56,26 +50,12 @@ const Login = ({ setIsAuthenticated, setIsAdmin }) => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-900 relative">
-      {/* Help Box for Demo Credentials */}
-      <div className="absolute top-10 right-10 bg-gray-800 text-gray-200 p-4 rounded-lg shadow-lg w-64">
-        <h3 className="text-yellow-400 text-lg font-semibold mb-2">Quick Access</h3>
-        <p className="mb-2">Use the following credentials:</p>
-        <div className="mb-4">
-          <p className="font-semibold">Admin Account:</p>
-          <p>Email: <span className="text-yellow-300">nishantvidhuri0987@gmail.com</span></p>
-          <p>Password: <span className="text-yellow-300">admin123</span></p>
-          <p className="text-sm text-gray-400 mt-1">Admin can edit or delete user accounts.</p>
-        </div>
-        <div>
-          <p className="font-semibold">Demo Account:</p>
-          <p>Email: <span className="text-yellow-300">{demoAccount.email}</span></p>
-          <p>Password: <span className="text-yellow-300">{demoAccount.password}</span></p>
-        </div>
-      </div>
-
+    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-4 sm:p-6 relative">
       {/* Login Form */}
-      <form className="bg-gray-800 p-8 rounded-lg shadow-md w-96 space-y-6" onSubmit={handleLogin}>
+      <form
+        className="bg-gray-800 p-6 sm:p-8 rounded-lg shadow-md w-full max-w-md space-y-6"
+        onSubmit={handleLogin}
+      >
         <h2 className="text-2xl font-semibold text-center text-yellow-400">Login</h2>
 
         {errorMessage && (
@@ -149,6 +129,23 @@ const Login = ({ setIsAuthenticated, setIsAdmin }) => {
           </Link>
         </p>
       </form>
+
+      {/* Quick Access Box: below form on small/medium screens, top-right on large screens */}
+      <div className="bg-gray-800 text-gray-200 p-4 rounded-lg shadow-lg max-w-xs mt-4 sm:mt-6 md:mt-8 lg:absolute lg:top-10 lg:right-10 lg:mt-0">
+        <h3 className="text-yellow-400 text-lg font-semibold mb-2">Quick Access</h3>
+        <p className="mb-2">Use the following credentials:</p>
+        <div className="mb-4">
+          <p className="font-semibold">Admin Account:</p>
+          <p>Email: <span className="text-yellow-300">nishantvidhuri0987@gmail.com</span></p>
+          <p>Password: <span className="text-yellow-300">admin123</span></p>
+          <p className="text-sm text-gray-400 mt-1">Admin can edit or delete user accounts.</p>
+        </div>
+        <div>
+          <p className="font-semibold">Demo Account:</p>
+          <p>Email: <span className="text-yellow-300">{demoAccount.email}</span></p>
+          <p>Password: <span className="text-yellow-300">{demoAccount.password}</span></p>
+        </div>
+      </div>
     </div>
   );
 };
