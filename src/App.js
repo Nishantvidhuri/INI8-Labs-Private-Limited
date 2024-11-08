@@ -19,8 +19,9 @@ const demoUsers = [
 ];
 
 const initializeDemoUsers = () => {
-  if (!sessionStorage.getItem('users')) {
-    sessionStorage.setItem('users', JSON.stringify(demoUsers));
+  // Only add demo users if 'users' does not exist in localStorage
+  if (!localStorage.getItem('users')) {
+    localStorage.setItem('users', JSON.stringify(demoUsers));
   }
 };
 
@@ -30,8 +31,8 @@ const App = () => {
 
   useEffect(() => {
     initializeDemoUsers();
-    const loggedInUser = sessionStorage.getItem("isAuthenticated");
-    const adminStatus = sessionStorage.getItem("isAdmin");
+    const loggedInUser = localStorage.getItem("isAuthenticated");
+    const adminStatus = localStorage.getItem("isAdmin");
 
     if (loggedInUser) setIsAuthenticated(true);
     if (adminStatus === 'true') setIsAdmin(true);
