@@ -28,13 +28,13 @@ const AccountManagement = ({ setIsAuthenticated }) => {
     const users = JSON.parse(localStorage.getItem('users')) || [];
     const updatedUsers = users.map(user => user.email === updatedUser.email ? updatedUser : user);
     localStorage.setItem('users', JSON.stringify(updatedUsers));
-    localStorage.setItem('currentUser', JSON.stringify(updatedUser)); // Update currentUser in storage
+    localStorage.setItem('currentUser', JSON.stringify(updatedUser));
   };
 
   const handleSave = () => {
     const updatedUser = { ...user, profilePicture, coverPhoto };
     setUser(updatedUser);
-    updateUserInStorage(updatedUser); // Persist changes to `localStorage`
+    updateUserInStorage(updatedUser);
     setIsEditing(false);
     alert("Profile updated successfully!");
   };
@@ -66,100 +66,110 @@ const AccountManagement = ({ setIsAuthenticated }) => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-900">
-      <div className="w-80 h-auto bg-white rounded-lg shadow-lg overflow-hidden relative">
+    <div className="flex justify-center items-center min-h-screen bg-gray-900 px-4">
+      {/* Main Card */}
+      <div className={`bg-white rounded-lg shadow-lg overflow-hidden ${isEditing ? 'w-full max-w-4xl flex flex-col md:flex-row' : 'w-80'}`}>
         
-        {/* Edit Button */}
-        <button
-          onClick={() => setIsEditing(!isEditing)}
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-          title="Edit Profile"
-        >
-          ✏️
-        </button>
+        {/* Left Section: Profile Picture and Cover Photo */}
+        <div className={`relative ${isEditing ? 'flex flex-col items-center md:w-1/3 bg-gray-200 p-4' : ''}`}>
+          {/* Cover Photo */}
+          <div className={`${isEditing ? 'w-full h-32 bg-gray-300 rounded-lg overflow-hidden mb-4' : 'w-full h-40'}`}>
+            {coverPhoto ? (
+              <img src={coverPhoto} alt="cover" className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gray-300"></div>
+            )}
+          </div>
 
-        {/* Cover photo section */}
-        {coverPhoto ? (
-          <img src={coverPhoto} alt="cover" className="w-full h-40 object-cover" />
-        ) : (
-          <div className="w-full h-40 bg-gray-300"></div>
-        )}
+          {/* Profile Picture */}
+          <div className={`${isEditing ? 'w-24 h-24 -mt-12 mb-4' : '-mt-12'} w-20 h-20 bg-gray-400 rounded-full overflow-hidden border-4 border-white shadow-md mx-auto`}>
+            <img src={profilePicture} alt="avatar" className="w-full h-full object-cover" />
+          </div>
 
-        <div className="text-center p-4">
-          {/* Profile picture */}
-          <img src={profilePicture} alt="avatar" className="w-20 h-20 rounded-full mx-auto -mt-12 border-4 border-white" />
-          
-          {/* User Information */}
-          <div className="mt-4">
-            {isEditing ? (
-              <>
+          {/* Edit Button in Bottom Right of Profile Section */}
+          <button
+            onClick={() => setIsEditing(!isEditing)}
+            className={`${isEditing ? 'absolute bottom-4 right-4' : 'absolute top-2 right-2'} w-10 h-10 flex items-center justify-center bg-blue-500 text-white rounded-full hover:bg-blue-600 shadow-lg`}
+            title="Edit Profile"
+          >
+            <span className="material-icons">edit</span>
+          </button>
+        </div>
+
+        {/* Right Section: User Information */}
+        <div className={`${isEditing ? 'p-6 md:w-2/3' : 'text-center p-4'}`}>
+          {isEditing ? (
+            <>
+              <div className="mb-4">
                 <input
                   type="text"
                   value={user.name}
                   onChange={(e) => setUser({ ...user, name: e.target.value })}
-                  className="w-full p-2 mb-2 border border-gray-300 rounded focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                   placeholder="Name"
                 />
+              </div>
+              <div className="mb-4">
                 <input
                   type="text"
                   value={user.position}
                   onChange={(e) => setUser({ ...user, position: e.target.value })}
-                  className="w-full p-2 mb-2 border border-gray-300 rounded focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                   placeholder="Position"
                 />
+              </div>
+              <div className="mb-4">
                 <textarea
                   value={user.bio}
                   onChange={(e) => setUser({ ...user, bio: e.target.value })}
-                  className="w-full p-2 mb-2 border border-gray-300 rounded focus:outline-none"
+                  className="w-full p-3 border border-gray-300 rounded focus:outline-none focus:border-blue-500"
                   placeholder="Bio"
+                  rows="3"
                 ></textarea>
-              </>
-            ) : (
-              <>
-                <div className="text-xl font-semibold text-gray-800">{user.name}</div>
-                <div className="text-sm text-gray-500 mb-4">{user.position}</div>
-                <p className="text-gray-600 text-sm mb-4">{user.bio}</p>
-              </>
-            )}
+              </div>
 
-            {/* Profile and cover photo input fields, only visible in edit mode */}
-            {isEditing && (
-              <>
-                <div className="mt-2">
-                  <label className="block mb-2 text-gray-500">Change Profile Picture</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleProfilePictureChange}
-                    className="w-full text-gray-700 px-4 py-2 bg-gray-200 rounded focus:outline-none"
-                  />
-                </div>
-                <div className="mt-2">
-                  <label className="block mb-2 text-gray-500">Change Cover Photo</label>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleCoverPhotoChange}
-                    className="w-full text-gray-700 px-4 py-2 bg-gray-200 rounded focus:outline-none"
-                  />
-                </div>
-                <button
-                  onClick={handleSave}
-                  className="w-full py-3 mt-4 bg-blue-500 text-white font-semibold rounded hover:bg-blue-600 transition duration-200"
-                >
-                  Save Changes
-                </button>
-              </>
-            )}
+              {/* Profile and Cover Photo Uploads */}
+              <div className="mb-4">
+                <label className="block text-gray-500 mb-2">Change Profile Picture</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfilePictureChange}
+                  className="w-full p-2 bg-gray-100 rounded focus:outline-none"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-500 mb-2">Change Cover Photo</label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleCoverPhotoChange}
+                  className="w-full p-2 bg-gray-100 rounded focus:outline-none"
+                />
+              </div>
 
-            {/* Logout Button */}
-            <button
-              onClick={handleLogout}
-              className="w-full py-3 mt-4 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200"
-            >
-              Logout
-            </button>
-          </div>
+              <button
+                onClick={handleSave}
+                className="w-full py-3 mt-4 bg-green-500 text-white font-semibold rounded hover:bg-green-600 transition duration-200"
+              >
+                Save Changes
+              </button>
+            </>
+          ) : (
+            <>
+              <div className="text-xl font-semibold text-gray-800">{user.name}</div>
+              <div className="text-sm text-gray-500 mb-4">{user.position}</div>
+              <p className="text-gray-600 text-sm mb-4">{user.bio}</p>
+            </>
+          )}
+
+          {/* Logout Button */}
+          <button
+            onClick={handleLogout}
+            className="w-full py-3 mt-4 bg-red-500 text-white font-semibold rounded hover:bg-red-600 transition duration-200"
+          >
+            Logout
+          </button>
         </div>
       </div>
     </div>
