@@ -8,6 +8,7 @@ const Register = () => {
   const [confirmPassword, setConfirmPassword] = useState('');
   const [position, setPosition] = useState('');
   const [bio, setBio] = useState('');
+  const [dateOfBirth, setDateOfBirth] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
 
@@ -40,6 +41,7 @@ const Register = () => {
       password,
       position,
       bio,
+      dateOfBirth,
       profilePicture: getRandomProfilePicture(),
       coverPhoto: getRandomCoverPhoto(),
     };
@@ -72,8 +74,17 @@ const Register = () => {
           className="w-full p-3 bg-gray-700 text-gray-200 border border-gray-600 rounded focus:outline-none focus:border-yellow-400"
           required
         />
+        
+        {/* Date of Birth Field */}
+        <input
+          type="date"
+          placeholder="Date of Birth"
+          value={dateOfBirth}
+          onChange={(e) => setDateOfBirth(e.target.value)}
+          className="w-full p-3 bg-gray-700 text-gray-200 border border-gray-600 rounded focus:outline-none focus:border-yellow-400"
+          required
+        />
 
-        {/* Password Field with Show Password Toggle */}
         <div className="relative">
           <input
             type={showPassword ? "text" : "password"}
