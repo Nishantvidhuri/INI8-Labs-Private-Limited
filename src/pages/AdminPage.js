@@ -7,6 +7,9 @@ const AdminPage = ({ setIsAuthenticated, setIsAdmin }) => {
   const [editName, setEditName] = useState('');
   const [editPosition, setEditPosition] = useState('');
   const [editBio, setEditBio] = useState('');
+  const [editDob, setEditDob] = useState('');
+  const [editProfilePicture, setEditProfilePicture] = useState('');
+  const [editCoverPhoto, setEditCoverPhoto] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,11 +30,16 @@ const AdminPage = ({ setIsAuthenticated, setIsAdmin }) => {
     setEditName(user.name);
     setEditPosition(user.position);
     setEditBio(user.bio);
+    setEditDob(user.dob || '');
+    setEditProfilePicture(user.profilePicture || '');
+    setEditCoverPhoto(user.coverPhoto || '');
   };
 
   const handleSaveUser = () => {
     const updatedUsers = users.map((user) =>
-      user.email === editingUser.email ? { ...user, name: editName, position: editPosition, bio: editBio } : user
+      user.email === editingUser.email
+        ? { ...user, name: editName, position: editPosition, bio: editBio, dob: editDob, profilePicture: editProfilePicture, coverPhoto: editCoverPhoto }
+        : user
     );
     setUsers(updatedUsers);
     localStorage.setItem('users', JSON.stringify(updatedUsers));
@@ -44,6 +52,28 @@ const AdminPage = ({ setIsAuthenticated, setIsAdmin }) => {
     setUsers(updatedUsers);
     localStorage.setItem('users', JSON.stringify(updatedUsers));
     alert('User deleted successfully');
+  };
+
+  const handleProfilePictureChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditProfilePicture(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleCoverPhotoChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEditCoverPhoto(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   return (
@@ -79,8 +109,33 @@ const AdminPage = ({ setIsAuthenticated, setIsAdmin }) => {
             value={editBio}
             onChange={(e) => setEditBio(e.target.value)}
             placeholder="Bio"
-            className="w-full p-3 bg-gray-700 text-gray-200 border border-gray-600 rounded focus:outline-none focus:border-yellow-400"
+            className="w-full p-3 bg-gray-700 text-gray-200 border border-gray-600 rounded focus:outline-none focus:border-yellow-400 mb-4"
           ></textarea>
+          <input
+            type="date"
+            value={editDob}
+            onChange={(e) => setEditDob(e.target.value)}
+            placeholder="Date of Birth"
+            className="w-full p-3 mb-4 bg-gray-700 text-gray-200 border border-gray-600 rounded focus:outline-none focus:border-yellow-400"
+          />
+          <div className="mb-4">
+            <label className="text-gray-400 mb-2 block">Profile Picture</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleProfilePictureChange}
+              className="w-full p-3 bg-gray-700 text-gray-200 border border-gray-600 rounded focus:outline-none"
+            />
+          </div>
+          <div className="mb-4">
+            <label className="text-gray-400 mb-2 block">Cover Photo</label>
+            <input
+              type="file"
+              accept="image/*"
+              onChange={handleCoverPhotoChange}
+              className="w-full p-3 bg-gray-700 text-gray-200 border border-gray-600 rounded focus:outline-none"
+            />
+          </div>
           <button
             onClick={handleSaveUser}
             className="w-full py-3 mt-4 bg-green-500 text-gray-900 font-semibold rounded hover:bg-green-600 transition duration-200"

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import '@fortawesome/fontawesome-free/css/all.min.css';
 
 const Login = ({ setIsAuthenticated, setIsAdmin }) => {
   const [email, setEmail] = useState('');
@@ -7,11 +8,27 @@ const Login = ({ setIsAuthenticated, setIsAdmin }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [copiedText, setCopiedText] = useState(null);
   const navigate = useNavigate();
 
   const demoAccount = {
     email: "alice@example.com",
     password: "alice123"
+  };
+
+  const adminAccount = {
+    email: "nishantvidhuri0987@gmail.com",
+    password: "admin123"
+  };
+
+  const handleCopy = (text) => {
+    navigator.clipboard.writeText(text);
+    setCopiedText(text);
+
+    // Revert back after 5 seconds
+    setTimeout(() => {
+      setCopiedText(null);
+    }, 5000);
   };
 
   const handleLogin = (e) => {
@@ -130,20 +147,47 @@ const Login = ({ setIsAuthenticated, setIsAdmin }) => {
         </p>
       </form>
 
-      {/* Quick Access Box: below form on small/medium screens, top-right on large screens */}
+      {/* Quick Access Box */}
       <div className="bg-gray-800 text-gray-200 p-4 rounded-lg shadow-lg max-w-xs mt-4 sm:mt-6 md:mt-8 lg:absolute lg:top-10 lg:right-10 lg:mt-0">
         <h3 className="text-yellow-400 text-lg font-semibold mb-2">Quick Access</h3>
         <p className="mb-2">Use the following credentials:</p>
-        <div className="mb-4">
+        
+        {/* Admin Account Info */}
+        <div className="mb-4 relative">
           <p className="font-semibold">Admin Account:</p>
-          <p>Email: <span className="text-yellow-300">nishantvidhuri0987@gmail.com</span></p>
-          <p>Password: <span className="text-yellow-300">admin123</span></p>
-          <p className="text-sm text-gray-400 mt-1">Admin can edit or delete user accounts.</p>
+          <p>
+            Email: <span className="text-yellow-300">{adminAccount.email}</span>
+            <i
+              className={`ml-2 cursor-pointer ${copiedText === adminAccount.email ? 'fa-solid fa-check text-green-400' : 'fa-solid fa-copy text-gray-400 hover:text-yellow-300'}`}
+              onClick={() => handleCopy(adminAccount.email)}
+            />
+          </p>
+          <p>
+            Password: <span className="text-yellow-300">{adminAccount.password}</span>
+            <i
+              className={`ml-2 cursor-pointer ${copiedText === adminAccount.password ? 'fa-solid fa-check text-green-400' : 'fa-solid fa-copy text-gray-400 hover:text-yellow-300'}`}
+              onClick={() => handleCopy(adminAccount.password)}
+            />
+          </p>
         </div>
-        <div>
+
+        {/* Demo Account Info */}
+        <div className="relative">
           <p className="font-semibold">Demo Account:</p>
-          <p>Email: <span className="text-yellow-300">{demoAccount.email}</span></p>
-          <p>Password: <span className="text-yellow-300">{demoAccount.password}</span></p>
+          <p>
+            Email: <span className="text-yellow-300">{demoAccount.email}</span>
+            <i
+              className={`ml-2 cursor-pointer ${copiedText === demoAccount.email ? 'fa-solid fa-check text-green-400' : 'fa-solid fa-copy text-gray-400 hover:text-yellow-300'}`}
+              onClick={() => handleCopy(demoAccount.email)}
+            />
+          </p>
+          <p>
+            Password: <span className="text-yellow-300">{demoAccount.password}</span>
+            <i
+              className={`ml-2 cursor-pointer ${copiedText === demoAccount.password ? 'fa-solid fa-check text-green-400' : 'fa-solid fa-copy text-gray-400 hover:text-yellow-300'}`}
+              onClick={() => handleCopy(demoAccount.password)}
+            />
+          </p>
         </div>
       </div>
     </div>
